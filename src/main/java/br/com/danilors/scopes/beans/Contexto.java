@@ -8,7 +8,7 @@ import jakarta.annotation.PostConstruct;
 
 import java.util.UUID;
 
-public class Context {
+public class Contexto {
 
     private WrapperData wrapperData;
 
