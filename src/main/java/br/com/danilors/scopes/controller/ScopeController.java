@@ -27,15 +27,12 @@ public class ScopeController {
     @GetMapping
     public Mono<WrapperData> getContext() {
         logger.info("Received request for context");
-        return Mono.deferContextual(contextView -> {
-            Contexto contexto = new Contexto();
-            contexto.init();
-            return callerService.call()
-                    .then(Mono.deferContextual(innerContextView -> {
-                        var finalContext = contextManager.getContext(innerContextView);
-                        return Mono.just(finalContext.getWrapperData());
-                    }))
-                    .contextWrite(contextManager.setContext(contexto));
-        }).doOnSuccess(data -> logger.info("Successfully retrieved context data: {}", data));
+        return Mono.deferContextual(contextView -> callerService.call()
+                        .contextWrite(contextManager.setContext(new Contexto()))
+                        .then(Mono.deferContextual(innerContextView -> {
+                            var finalContext = contextManager.getContext(innerContextView);
+                            return Mono.just(finalContext.getWrapperData());
+                        })))
+                .doOnSuccess(data -> logger.info("Successfully retrieved context data: {}", data));
     }
 }

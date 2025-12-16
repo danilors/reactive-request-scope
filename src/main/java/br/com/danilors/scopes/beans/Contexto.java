@@ -12,8 +12,7 @@ public class Contexto {
 
     private WrapperData wrapperData;
 
-    @PostConstruct
-    public void init() {
+    public Contexto() {
         wrapperData = new WrapperData(UUID.randomUUID().toString());
     }
 
